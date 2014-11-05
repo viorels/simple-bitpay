@@ -1,6 +1,14 @@
 extends layout
 
 block content
-  h1= title
-  p Welcome to #{title}!
-  iframe(src="https://bitpay.com/invoice?id=MEYvhBpMfgB6wRBBqQRBni&view=iframe", width=600, height=300)
+  h1= name
+  if paid
+    h2 Here is the product you have paid for.
+    iframe(width="560" height="315" src="//www.youtube.com/embed/U-2fPDPRRNI" frameborder="0" allowfullscreen)
+  else
+    p Price: $#{price}
+    form(name="buy", action="/product", method="post")
+        input(type="hidden", name="name", value="#{name}")
+        input(type="hidden", name="price", value="#{price}")
+        input(type="submit", value="Buy")
+

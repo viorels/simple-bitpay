@@ -5,6 +5,10 @@ block content
   p Welcome to #{title}! Which subscription is best for you?
   ul
     li
-      a(href="/product/go") Project GO
+      a(href="/product?name=Project GO&price=40") Project GO
     li
-      a(href="/product/30") Simple 30
+      a(href="/product?name=Simple 30&price=399") Simple 30
+  form(name="new", action="/product", method="get")
+      input(type="text", name="name", placeholder="Product name")
+      input(type="text", name="price", placeholder="Price")
+      input(type="submit", value="Create")
