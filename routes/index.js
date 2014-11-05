@@ -9,7 +9,8 @@ router.get('/', function(req, res) {
   res.render('index', { title: 'Simple Pickup' });
 });
 
-/* PRODUCT page with name and price */
+/* PRODUCT page with name and price
+   If last invoice was paid then show the product instead */
 router.get('/product', function(req, res) {
   var productName = req.query.name;
   var productPrice = req.query.price;
@@ -23,9 +24,7 @@ router.get('/product', function(req, res) {
   } else {
     client = getBitPayClient();
     client.on('ready', function() {
-      console.log("INVOICE", req.session.invoice);
       client.get('invoices/' + req.session.invoice, function(err, invoice) {
-        console.log(err || invoice);
         var paid = !err && (invoice.status == 'paid' || invoice.status == 'confirmed');
         res.render('product', {
           title: productName,
@@ -38,6 +37,7 @@ router.get('/product', function(req, res) {
   }
 });
 
+/* user has clicked the <BUY> button so redirect to bitpay */
 router.post('/product', function(req, res) {
   var productName = req.body.name;
   var productPrice = req.body.price;
@@ -55,7 +55,6 @@ router.post('/product', function(req, res) {
       redirectURL: redirectURL,
     }, function(err, invoice) {
       req.session.invoice = invoice.id
-      console.log(err || invoice);
       res.redirect(303, invoice.url);
     });
   });
