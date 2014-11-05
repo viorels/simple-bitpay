@@ -42,17 +42,13 @@ router.post('/product', function(req, res) {
   var productName = req.body.name;
   var productPrice = req.body.price;
 
-  var port = req.app.settings.port;
-  var redirectURL = 'http://' + req.hostname  + (port == 80 || port == 443 ? '' : ':' + port) + '/product';
-  console.log('redirectURL', redirectURL);
-
   client = getBitPayClient();
   client.on('ready', function() {
     client.post('invoices', {
       itemDesc: productName,
       price: productPrice,
       currency: 'USD',
-      redirectURL: redirectURL,
+      redirectURL: getFullUrl('/product?name=' + productName + '&price=' + productPrice),
     }, function(err, invoice) {
       req.session.invoice = invoice.id
       res.redirect(303, invoice.url);
@@ -65,6 +61,12 @@ function getBitPayClient() {
   var privkey = bitauth.decrypt('', encPrivKey);
   var client = bitpay.createClient(privkey);
   return client;
+}
+
+function getFullUrl(path) {
+  var port = req.app.settings.port;
+  var fullURL = 'http://' + req.hostname  + (port == 80 || port == 443 ? '' : ':' + port) + path;
+  return fullURL;
 }
 
 module.exports = router;
