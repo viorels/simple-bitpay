@@ -48,7 +48,7 @@ router.post('/product', function(req, res) {
       itemDesc: productName,
       price: productPrice,
       currency: 'USD',
-      redirectURL: getFullUrl('/product?name=' + productName + '&price=' + productPrice),
+      redirectURL: getFullUrl(req, '/product?name=' + productName + '&price=' + productPrice),
     }, function(err, invoice) {
       req.session.invoice = invoice.id
       res.redirect(303, invoice.url);
@@ -63,7 +63,7 @@ function getBitPayClient() {
   return client;
 }
 
-function getFullUrl(path) {
+function getFullUrl(req, path) {
   var port = req.app.settings.port;
   var fullURL = 'http://' + req.hostname  + (port == 80 || port == 443 ? '' : ':' + port) + path;
   return fullURL;
