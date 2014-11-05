@@ -64,7 +64,8 @@ function getBitPayClient() {
 }
 
 function getFullUrl(req, path) {
-  var port = req.app.settings.port;
+  // var port = req.app.settings.port;
+  var port = 80; // hardcode this for Heroku as it uses other ports internally
   var fullURL = 'http://' + req.hostname  + (port == 80 || port == 443 ? '' : ':' + port) + path;
   return fullURL;
 }
